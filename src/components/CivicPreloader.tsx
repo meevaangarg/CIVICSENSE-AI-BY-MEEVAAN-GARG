@@ -74,21 +74,37 @@ export const CivicPreloader: React.FC<CivicPreloaderProps> = ({ onComplete }) =>
   return (
     <div 
       onClick={handleSkip}
-      className={`fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#070D18] text-white select-none transition-opacity duration-500 cursor-pointer ${
+      className={`fixed inset-0 z-[99999] flex flex-col items-center justify-center bg-[#070D18] text-white select-none transition-opacity duration-500 cursor-pointer overflow-hidden ${
         isFadingOut ? 'opacity-0 pointer-events-none' : 'opacity-100'
       }`}
-      style={{
-        backgroundImage: 'radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px)',
-        backgroundSize: '24px 24px'
-      }}
     >
-      <div className="w-full max-w-md px-6 flex flex-col items-center space-y-6">
+      {/* Translucent Real-World Civic Infrastructure Backdrop */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+        <img 
+          src="/assets/delhi_road_preloader.jpg" 
+          alt="Ground Reality Civic Infrastructure" 
+          className="w-full h-full object-cover opacity-35 scale-105 filter brightness-95 contrast-110" 
+        />
+        {/* Soft Dark Overlays for High Legibility and Translucent Depth */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#070D18]/80 via-[#070D18]/60 to-[#070D18]/85" />
+        <div 
+          className="absolute inset-0 opacity-30"
+          style={{
+            backgroundImage: 'radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px)',
+            backgroundSize: '24px 24px'
+          }}
+        />
+        {/* Radial vignette for focus */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,rgba(7,13,24,0.8)_100%)]" />
+      </div>
+
+      <div className="relative z-10 w-full max-w-md px-6 flex flex-col items-center space-y-6">
         
         {/* Emblem & Pulse Ring */}
         <div className="relative flex items-center justify-center">
           <div className="absolute w-28 h-28 rounded-full border border-blue-500/20 animate-ping opacity-30" />
           <div className="absolute w-24 h-24 rounded-full border border-slate-700/60" />
-          <div className="relative w-16 h-16 rounded-2xl bg-[#0B1120] border border-slate-700/80 shadow-2xl p-2.5 flex items-center justify-center">
+          <div className="relative w-16 h-16 rounded-2xl bg-[#0B1120]/90 backdrop-blur-md border border-slate-700/80 shadow-2xl p-2.5 flex items-center justify-center">
             <img 
               src="/assets/logo_civica.svg" 
               alt="CIVICA Emblem" 
@@ -99,11 +115,11 @@ export const CivicPreloader: React.FC<CivicPreloaderProps> = ({ onComplete }) =>
 
         {/* Title & Organization Header */}
         <div className="text-center space-y-1">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-[10px] font-mono uppercase tracking-wider text-blue-400 mb-1">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-[10px] font-mono uppercase tracking-wider text-blue-400 mb-1 backdrop-blur-sm">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
             <span>NCT of Delhi Municipal Grid</span>
           </div>
-          <h1 className="text-2xl font-bold tracking-tight font-['Space_Grotesk'] text-white">
+          <h1 className="text-2xl font-bold tracking-tight font-['Space_Grotesk'] text-white drop-shadow-md">
             CIVICA
           </h1>
           <p className="text-xs text-slate-400 font-sans tracking-wide">
@@ -112,7 +128,7 @@ export const CivicPreloader: React.FC<CivicPreloaderProps> = ({ onComplete }) =>
         </div>
 
         {/* Telemetry Log Stream */}
-        <div className="w-full bg-[#0B1120]/90 border border-slate-800 rounded-xl p-3.5 space-y-2 text-[11px] font-mono shadow-xl">
+        <div className="w-full bg-[#0B1120]/85 backdrop-blur-md border border-slate-800/90 rounded-xl p-3.5 space-y-2 text-[11px] font-mono shadow-2xl">
           <div className="flex items-center justify-between text-slate-500 border-b border-slate-800/80 pb-1.5 text-[10px]">
             <span>NODE: DEL-HQ-01</span>
             <span className="text-emerald-400 font-semibold">{progress}%</span>
@@ -133,7 +149,7 @@ export const CivicPreloader: React.FC<CivicPreloaderProps> = ({ onComplete }) =>
         </div>
 
         {/* Bottom Hint */}
-        <div className="text-[10px] font-mono text-slate-500 tracking-wider flex items-center gap-2">
+        <div className="text-[10px] font-mono text-slate-400/80 tracking-wider flex items-center gap-2">
           <span>Click anywhere or press ESC to skip</span>
         </div>
 
