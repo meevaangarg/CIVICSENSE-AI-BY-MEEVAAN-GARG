@@ -7,6 +7,7 @@ import { ResolutionStudio } from './components/ResolutionStudio';
 import { CitizenReportModal } from './components/CitizenReportModal';
 import { IncidentDetailModal } from './components/IncidentDetailModal';
 import { ApiKeyModal } from './components/ApiKeyModal';
+import { OfficerDispatchModal } from './components/OfficerDispatchModal';
 import { 
   ListFilter, 
   Map, 
@@ -14,13 +15,16 @@ import {
   Plus, 
   Sun, 
   Moon, 
-  Key
+  Key,
+  CheckCircle2
 } from 'lucide-react';
 
 export function App() {
   const [activeTab, setActiveTab] = useState<'command' | 'tracks' | 'verify'>('command');
   const [incidents, setIncidents] = useState<CivicIncident[]>(INITIAL_INCIDENTS);
   const [selectedIncident, setSelectedIncident] = useState<CivicIncident | null>(null);
+  const [dispatchTargetIncident, setDispatchTargetIncident] = useState<CivicIncident | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isApiKeyModalOpen, setIsApiKeyModalOpen] = useState(false);
   const [isDark, setIsDark] = useState<boolean>(() => {
@@ -40,17 +44,50 @@ export function App() {
   const handleAddIncident = (newIncident: CivicIncident) => {
     setIncidents(prev => [newIncident, ...prev]);
     setActiveTab('tracks');
+    showToast(`Registered new report ${newIncident.trackingCode}`);
   };
 
-  const handleDispatch = (id: string) => {
+  const handleTriggerDispatch = (id: string) => {
+    const target = incidents.find(i => i.id === id);
+    if (target) {
+      setDispatchTargetIncident(target);
+    }
+  };
+
+  const handleConfirmOfficerDispatch = (id: string, officerBadge: string) => {
     setIncidents(prev =>
       prev.map(i => (i.id === id ? { ...i, status: 'Dispatched' as const } : i))
     );
+    setSelectedIncident(prev => (prev?.id === id ? { ...prev, status: 'Dispatched' as const } : prev));
+    showToast(`✓ Authorized dispatch by ${officerBadge} to field machinery unit`);
+  };
+
+  const handleResolveIncident = (id: string) => {
+    setIncidents(prev =>
+      prev.map(i => (i.id === id ? { ...i, status: 'Resolved' as const, verificationStatus: 'Verified Authenticated' as const } : i))
+    );
+    setSelectedIncident(prev => (prev?.id === id ? { ...prev, status: 'Resolved' as const, verificationStatus: 'Verified Authenticated' as const } : prev));
+    showToast(`✓ Quality Audit Approved: Incident marked Resolved in Municipal Register`);
+  };
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => {
+      setToastMessage(null);
+    }, 4500);
   };
 
   return (
     <div className="min-h-screen bg-[#F4F7FC] dark:bg-[#070D18] text-slate-900 dark:text-slate-100 flex flex-col justify-between font-sans selection:bg-blue-600/20 selection:text-blue-700 dark:selection:text-blue-300">
       
+      {/* Toast Notification */}
+      {toastMessage && (
+        <div className="fixed top-16 right-5 z-50 flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 text-white border border-slate-700 shadow-2xl text-xs font-mono animate-fade-in">
+          <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
       {/* Navigation Bar */}
       <header className="sticky top-0 z-40 bg-white/95 dark:bg-[#0B1120]/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 lg:px-8 py-3 transition-colors">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
@@ -146,7 +183,7 @@ export function App() {
             incidents={incidents}
             selectedIncident={selectedIncident}
             onSelectIncident={(inc) => setSelectedIncident(inc)}
-            onDispatchIncident={handleDispatch}
+            onDispatchIncident={handleTriggerDispatch}
             isDark={isDark}
           />
         )}
@@ -160,7 +197,10 @@ export function App() {
         )}
 
         {activeTab === 'verify' && (
-          <ResolutionStudio incidents={incidents} />
+          <ResolutionStudio 
+            incidents={incidents} 
+            onResolveIncident={handleResolveIncident}
+          />
         )}
       </main>
 
@@ -174,7 +214,14 @@ export function App() {
       <IncidentDetailModal
         incident={selectedIncident}
         onClose={() => setSelectedIncident(null)}
-        onDispatch={handleDispatch}
+        onDispatch={handleTriggerDispatch}
+      />
+
+      <OfficerDispatchModal
+        isOpen={Boolean(dispatchTargetIncident)}
+        incident={dispatchTargetIncident}
+        onClose={() => setDispatchTargetIncident(null)}
+        onConfirmDispatch={handleConfirmOfficerDispatch}
       />
 
       <ApiKeyModal
@@ -189,7 +236,7 @@ export function App() {
             <span className="font-bold text-slate-800 dark:text-slate-200 font-['Space_Grotesk']">
               CIVICA
             </span>
-            <span>· Delhi Civic Solutions</span>
+            <span>· Delhi Municipal Action Platform</span>
           </div>
 
           <div className="flex items-center gap-3">

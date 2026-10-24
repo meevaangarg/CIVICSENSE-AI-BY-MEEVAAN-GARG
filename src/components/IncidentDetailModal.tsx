@@ -10,7 +10,8 @@ import {
   CheckCircle2, 
   ShieldCheck, 
   Volume2, 
-  IndianRupee 
+  IndianRupee,
+  Printer
 } from 'lucide-react';
 
 interface IncidentDetailModalProps {
@@ -157,23 +158,46 @@ export const IncidentDetailModal: React.FC<IncidentDetailModalProps> = ({
           </div>
 
           {/* Actions */}
-          <div className="pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
-            <button
-              onClick={onClose}
-              className="px-4 py-2 text-xs font-medium text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
-            >
-              Close Window
-            </button>
-            <button
-              onClick={() => {
-                onDispatch(incident.id);
-                onClose();
-              }}
-              className="px-6 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium transition-all shadow-md flex items-center gap-2"
-            >
-              <CheckCircle2 className="w-4 h-4" />
-              <span>Dispatch Action to {incident.department}</span>
-            </button>
+          <div className="pt-4 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={onClose}
+                className="px-4 py-2 text-xs font-medium text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+              >
+                Close Window
+              </button>
+              <button
+                onClick={() => window.print()}
+                className="px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-mono flex items-center gap-1.5 transition-colors"
+                title="Print official municipal field memo"
+              >
+                <Printer className="w-3.5 h-3.5" />
+                <span>Print Work-Order</span>
+              </button>
+            </div>
+
+            {incident.status === 'Dispatched' ? (
+              <div className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 text-xs font-mono font-semibold">
+                <CheckCircle2 className="w-4 h-4" />
+                <span>Squad Dispatched to Field</span>
+              </div>
+            ) : incident.status === 'Resolved' ? (
+              <div className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-slate-500/10 text-slate-600 dark:text-slate-400 border border-slate-500/20 text-xs font-mono font-semibold">
+                <CheckCircle2 className="w-4 h-4" />
+                <span>Incident Officially Resolved</span>
+              </div>
+            ) : (
+              <button
+                onClick={() => {
+                  onDispatch(incident.id);
+                  onClose();
+                }}
+                className="px-6 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium transition-all shadow-md flex items-center gap-2"
+              >
+                <CheckCircle2 className="w-4 h-4" />
+                <span>Dispatch Action to {incident.department}</span>
+              </button>
+            )}
           </div>
         </div>
       </div>

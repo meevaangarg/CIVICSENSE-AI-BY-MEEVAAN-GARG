@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import type { CivicIncident } from '../data/civicData';
 import { DelhiLeafletMap } from './DelhiLeafletMap';
-import { Send, MapPin } from 'lucide-react';
+import { Send, MapPin, CheckCircle2 } from 'lucide-react';
 
 interface AdminCommandCenterProps {
   incidents: CivicIncident[];
@@ -146,13 +146,31 @@ export const AdminCommandCenter: React.FC<AdminCommandCenterProps> = ({
                 >
                   Details
                 </button>
-                <button
-                  onClick={() => onDispatchIncident(activeIncident.id)}
-                  className="py-2 px-3 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium transition-all shadow-sm flex items-center justify-center gap-1.5"
-                >
-                  <Send className="w-3.5 h-3.5" />
-                  <span>Dispatch</span>
-                </button>
+                {activeIncident.status === 'Dispatched' ? (
+                  <button
+                    disabled
+                    className="py-2 px-3 rounded-lg bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 text-xs font-mono font-semibold flex items-center justify-center gap-1 cursor-default"
+                  >
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span>Dispatched</span>
+                  </button>
+                ) : activeIncident.status === 'Resolved' ? (
+                  <button
+                    disabled
+                    className="py-2 px-3 rounded-lg bg-slate-500/15 text-slate-500 border border-slate-500/30 text-xs font-mono font-semibold flex items-center justify-center gap-1 cursor-default"
+                  >
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span>Resolved</span>
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => onDispatchIncident(activeIncident.id)}
+                    className="py-2 px-3 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium transition-all shadow-sm flex items-center justify-center gap-1.5"
+                  >
+                    <Send className="w-3.5 h-3.5" />
+                    <span>Dispatch</span>
+                  </button>
+                )}
               </div>
             </div>
           </div>

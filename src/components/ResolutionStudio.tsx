@@ -11,9 +11,13 @@ import {
 
 interface ResolutionStudioProps {
   incidents: CivicIncident[];
+  onResolveIncident?: (id: string) => void;
 }
 
-export const ResolutionStudio: React.FC<ResolutionStudioProps> = ({ incidents }) => {
+export const ResolutionStudio: React.FC<ResolutionStudioProps> = ({ 
+  incidents,
+  onResolveIncident 
+}) => {
   const verifiedPreset = incidents.find(i => i.resolvedImageUrl) || incidents[0];
   
   const [selectedIncident, setSelectedIncident] = useState<CivicIncident>(verifiedPreset);
@@ -23,8 +27,8 @@ export const ResolutionStudio: React.FC<ResolutionStudioProps> = ({ incidents })
 
   const originalImage = selectedIncident.imageUrl;
   const contractorProofImage = isFraudTest
-    ? 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80'
-    : (selectedIncident.resolvedImageUrl || 'https://images.unsplash.com/photo-1584467735871-8e85353a8413?auto=format&fit=crop&w=800&q=80');
+    ? '/assets/incidents/fraud_mismatch_proof.jpg'
+    : (selectedIncident.resolvedImageUrl || '/assets/incidents/mcd_garbage_2.jpg');
 
   const handleRunVerification = async () => {
     setIsVerifying(true);
@@ -218,10 +222,44 @@ export const ResolutionStudio: React.FC<ResolutionStudioProps> = ({ incidents })
             </span>
           </div>
 
-          <div className="pt-3 space-y-2">
+          <div className="pt-3 space-y-3">
             <p className="text-slate-700 dark:text-slate-300">
               {verificationResult.contractorAuditNote}
             </p>
+
+            <div className="pt-2 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+              <span className="text-[11px] font-mono text-slate-500">
+                Audit Status: {selectedIncident.status}
+              </span>
+
+              {verificationResult.isAuthenticResolution ? (
+                selectedIncident.status === 'Resolved' ? (
+                  <span className="px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono text-xs font-semibold flex items-center gap-1.5">
+                    <CheckCircle className="w-3.5 h-3.5" />
+                    Officially Resolved &amp; Archived
+                  </span>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (onResolveIncident) {
+                        onResolveIncident(selectedIncident.id);
+                        setSelectedIncident(prev => ({ ...prev, status: 'Resolved' }));
+                      }
+                    }}
+                    className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs shadow-sm flex items-center gap-1.5 transition-all"
+                  >
+                    <CheckCircle className="w-3.5 h-3.5" />
+                    <span>Approve &amp; Mark Resolved</span>
+                  </button>
+                )
+              ) : (
+                <div className="px-3 py-1.5 rounded-lg bg-red-500/10 text-red-600 dark:text-red-400 font-mono text-xs font-medium flex items-center gap-1.5">
+                  <XCircle className="w-3.5 h-3.5" />
+                  <span>Claim Rejected: Penalty Notice Issued</span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}
