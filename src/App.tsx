@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { INITIAL_INCIDENTS } from './data/civicData';
 import type { CivicIncident } from './data/civicData';
-import { EarthLoadingScene } from './components/EarthLoadingScene';
 import { ProblemTracks } from './components/ProblemTracks';
 import { AdminCommandCenter } from './components/AdminCommandCenter';
 import { ResolutionStudio } from './components/ResolutionStudio';
@@ -9,7 +8,6 @@ import { CitizenReportModal } from './components/CitizenReportModal';
 import { IncidentDetailModal } from './components/IncidentDetailModal';
 import { ApiKeyModal } from './components/ApiKeyModal';
 import { 
-  Globe2, 
   ListFilter, 
   LayoutDashboard, 
   ShieldCheck, 
@@ -21,8 +19,7 @@ import {
 } from 'lucide-react';
 
 export function App() {
-  const [showEarthSplash, setShowEarthSplash] = useState(true);
-  const [activeTab, setActiveTab] = useState<'tracks' | 'command' | 'verify'>('command');
+  const [activeTab, setActiveTab] = useState<'command' | 'tracks' | 'verify'>('command');
   const [incidents, setIncidents] = useState<CivicIncident[]>(INITIAL_INCIDENTS);
   const [selectedIncident, setSelectedIncident] = useState<CivicIncident | null>(null);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
@@ -55,17 +52,12 @@ export function App() {
   return (
     <div className="min-h-screen bg-[#F4F7FC] dark:bg-[#070D18] text-slate-900 dark:text-slate-100 flex flex-col justify-between font-sans selection:bg-blue-600/20 selection:text-blue-700 dark:selection:text-blue-300">
       
-      {/* Cinematic Earth Splash Entrance Scene */}
-      {showEarthSplash && (
-        <EarthLoadingScene onEnter={() => setShowEarthSplash(false)} />
-      )}
-
-      {/* Top Global Status Banner */}
+      {/* Top Status Header */}
       <div className="bg-slate-900 text-slate-300 border-b border-slate-800 text-[11px] font-mono px-4 py-1.5 flex items-center justify-between overflow-x-auto">
         <div className="flex items-center gap-3 shrink-0">
           <span className="flex items-center gap-1.5 text-red-400">
             <Radio className="w-3 h-3 text-red-500 animate-pulse" />
-            LIVE CIVIC SURVEILLANCE
+            LIVE DISPATCH
           </span>
           <span className="text-slate-500">|</span>
           <span>NCT DELHI: 250 WARDS ONLINE</span>
@@ -79,13 +71,13 @@ export function App() {
         </div>
       </div>
 
-      {/* Main Navigation Header */}
+      {/* Main Navigation Bar */}
       <header className="sticky top-0 z-40 bg-white/90 dark:bg-[#0B1120]/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800/80 px-4 lg:px-8 py-3.5 transition-colors">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
           
           {/* Brand Logo & Title */}
           <div 
-            onClick={() => setShowEarthSplash(true)}
+            onClick={() => setActiveTab('command')}
             className="flex items-center gap-3 cursor-pointer group"
           >
             <div className="w-9 h-9 rounded-xl bg-[#0B1120] border border-slate-700 flex items-center justify-center p-1.5 shadow-sm group-hover:border-blue-500 transition-colors">
@@ -106,7 +98,7 @@ export function App() {
             </div>
           </div>
 
-          {/* Center Navigation Tabs */}
+          {/* Navigation Tabs */}
           <nav className="hidden md:flex items-center gap-1 bg-slate-100 dark:bg-slate-900/80 p-1 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-mono">
             <button
               onClick={() => setActiveTab('command')}
@@ -143,20 +135,11 @@ export function App() {
           {/* Action Toolbar */}
           <div className="flex items-center gap-2">
             <button
-              onClick={() => setShowEarthSplash(true)}
-              title="View Orbital Earth Scene"
-              className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 border border-slate-200 dark:border-slate-700 transition-colors hidden sm:flex items-center gap-1.5 text-xs font-mono"
-            >
-              <Globe2 className="w-3.5 h-3.5 text-blue-500" />
-              <span>Orbit</span>
-            </button>
-
-            <button
               onClick={() => setIsReportModalOpen(true)}
-              className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs shadow-sm transition-all flex items-center gap-1.5"
+              className="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs shadow-sm transition-all flex items-center gap-1.5"
             >
               <PlusCircle className="w-3.5 h-3.5" />
-              <span>Report</span>
+              <span>Report Issue</span>
             </button>
 
             <button
@@ -164,7 +147,7 @@ export function App() {
               title="Configure Gemini API Key"
               className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 border border-slate-200 dark:border-slate-700 transition-colors"
             >
-              <Key className="w-3.5 h-3.5" />
+              <Key className="w-4 h-4" />
             </button>
 
             <button
@@ -200,7 +183,7 @@ export function App() {
         </div>
       </header>
 
-      {/* Main Workspace Body */}
+      {/* Main Workspace */}
       <main className="max-w-7xl mx-auto px-4 lg:px-8 py-6 flex-1 w-full">
         {activeTab === 'command' && (
           <div className="animate-fade-in">
@@ -231,7 +214,7 @@ export function App() {
         )}
       </main>
 
-      {/* Global Modals */}
+      {/* Modals */}
       <CitizenReportModal
         isOpen={isReportModalOpen}
         onClose={() => setIsReportModalOpen(false)}

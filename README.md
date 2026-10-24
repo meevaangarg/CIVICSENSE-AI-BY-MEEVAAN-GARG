@@ -15,7 +15,7 @@ Transform raw, unstructured citizen reports into structured civic intelligence, 
 
 ![React](https://img.shields.io/badge/React%2019-20232A?style=flat-square&logo=react&logoColor=61DAFB)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
-![Three.js](https://img.shields.io/badge/Three.js-000000?style=flat-square&logo=threedotjs&logoColor=white)
+![Leaflet](https://img.shields.io/badge/Leaflet-GeoSpatial-199900?style=flat-square&logo=leaflet&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS%20v4-0EA5E9?style=flat-square&logo=tailwindcss&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat-square&logo=vite&logoColor=white)
 ![Delhi Municipalities](https://img.shields.io/badge/Routing-MCD%20%7C%20PWD%20%7C%20DJB%20%7C%20DPCC-15803D?style=flat-square)
@@ -93,18 +93,18 @@ flowchart LR
 
 ## Key Features
 
-- **Atmospheric 3D Earth Stage**: Interactive Three.js globe pinpointing Delhi coordinates (`28.6139° N, 77.2090° E`) with real-time civic telemetry.
-- **Problem Track Catalog**: Clean, high-density incident cards modeled after international technical challenges, avoiding visual clutter.
-- **Multilingual Snap & Speak**: Real-time parsing of Hinglish voice and colloquial transcripts into formal municipal work orders.
+- **Geo-Spatial Leaflet Incident Command**: Real-time Leaflet map of Delhi NCT with ward boundary clustering and municipal authority filters.
+- **Problem Track Catalog**: Clean, high-density incident cards modeled after Wadhwani AI problem statements with zero visual clutter.
+- **Multilingual Snap & Speak**: Real-time parsing of Hinglish voice and colloquial transcripts into formal municipal work orders using Gemini.
 - **Spatial Deduplication**: Real-time clustering algorithm merging duplicate reports across Delhi wards.
-- **Visual Fix Buster**: Computer-vision comparison of pre-repair and post-repair site imagery.
+- **Visual Fix Buster**: Computer-vision comparison of pre-repair and post-repair site imagery to stop contractor fraud.
 
 <br />
 
 ## Technical Stack
 
 - **Frontend**: React 19, TypeScript, Vite, Tailwind CSS v4
-- **3D Visualization**: Three.js (custom atmospheric limb shader, orbital camera controls)
+- **Mapping**: Leaflet with CartoDB Positron and Dark Matter tiles
 - **Icons**: Lucide React
 - **AI Processing**: Google Gemini API (Multimodal Vision & JSON Schema structured outputs)
 - **Deployment**: Vercel
