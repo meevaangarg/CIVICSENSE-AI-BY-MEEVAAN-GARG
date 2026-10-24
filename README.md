@@ -34,14 +34,41 @@ In metropolitan Delhi, civic redressal systems suffer from jurisdictional confus
 
 ## Architecture
 
-```
-[ Citizen Input ]                  [ CIVICA AI Engine ]                 [ Municipal Action ]
-  Photo + Voice (Hindi/Hinglish)  -->  Multimodal Vision + Geocoding  -->  Department Work Order
-  GPS Ward Mapping (Delhi)        -->  Spatial Cluster Engine         -->  Live Heatmap & SLA
-  Resolution Verification Photo   -->  Visual Before/After Validator  -->  Anti-Corruption Audit
-```
+<div align="center">
+<img src="docs/assets/civica-architecture.svg" alt="CIVICA Pipeline Architecture: Ingestion, AI Reasoning, Municipal Dispatch, and Visual Audit" width="100%" />
+</div>
 
 <br />
+
+```mermaid
+flowchart LR
+    subgraph S1["Stage 01: Intake"]
+        A1["Scene Photo"]
+        A2["Hinglish Voice"]
+        A3["GPS Ward Coordinates"]
+    end
+
+    subgraph S2["Stage 02: CIVICA AI Engine"]
+        B1["Gemini Vision Triage"]
+        B2["Spatial Deduplication"]
+        B3["Jurisdiction Router"]
+    end
+
+    subgraph S3["Stage 03: Dispatch"]
+        C1["Engineering Work-Order"]
+        C2["Machinery & Labor Specs"]
+        C3["MCD / PWD / DJB / DPCC SLA"]
+    end
+
+    subgraph S4["Stage 04: Visual Audit"]
+        D1["Before vs After Match"]
+        D2["Fake-Fix Anti-Fraud Buster"]
+        D3["Citizen Karma Credit"]
+    end
+
+    S1 --> S2 --> S3 --> S4
+```
+
 
 | Stage | Component | Role |
 |---|---|---|
