@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { INITIAL_INCIDENTS } from './data/civicData';
 import type { CivicIncident } from './data/civicData';
-import { EarthScene } from './components/EarthScene';
+import { EarthLoadingScene } from './components/EarthLoadingScene';
 import { ProblemTracks } from './components/ProblemTracks';
 import { AdminCommandCenter } from './components/AdminCommandCenter';
 import { ResolutionStudio } from './components/ResolutionStudio';
@@ -21,7 +21,8 @@ import {
 } from 'lucide-react';
 
 export function App() {
-  const [activeTab, setActiveTab] = useState<'earth' | 'tracks' | 'command' | 'verify'>('earth');
+  const [showEarthSplash, setShowEarthSplash] = useState(true);
+  const [activeTab, setActiveTab] = useState<'tracks' | 'command' | 'verify'>('command');
   const [incidents, setIncidents] = useState<CivicIncident[]>(INITIAL_INCIDENTS);
   const [selectedIncident, setSelectedIncident] = useState<CivicIncident | null>(null);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
@@ -52,8 +53,13 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#070D18] text-slate-900 dark:text-slate-100 flex flex-col justify-between font-sans selection:bg-blue-600/20 selection:text-blue-700 dark:selection:text-blue-300">
+    <div className="min-h-screen bg-[#F4F7FC] dark:bg-[#070D18] text-slate-900 dark:text-slate-100 flex flex-col justify-between font-sans selection:bg-blue-600/20 selection:text-blue-700 dark:selection:text-blue-300">
       
+      {/* Cinematic Earth Splash Entrance Scene */}
+      {showEarthSplash && (
+        <EarthLoadingScene onEnter={() => setShowEarthSplash(false)} />
+      )}
+
       {/* Top Global Status Banner */}
       <div className="bg-slate-900 text-slate-300 border-b border-slate-800 text-[11px] font-mono px-4 py-1.5 flex items-center justify-between overflow-x-auto">
         <div className="flex items-center gap-3 shrink-0">
@@ -68,7 +74,7 @@ export function App() {
         </div>
 
         <div className="flex items-center gap-3 shrink-0 pl-4">
-          <span className="text-slate-400">ROUTING STATUS:</span>
+          <span className="text-slate-400">ROUTING:</span>
           <span className="text-emerald-400">MCD · PWD · DJB · DPCC CONNECTED</span>
         </div>
       </div>
@@ -79,7 +85,7 @@ export function App() {
           
           {/* Brand Logo & Title */}
           <div 
-            onClick={() => setActiveTab('earth')}
+            onClick={() => setShowEarthSplash(true)}
             className="flex items-center gap-3 cursor-pointer group"
           >
             <div className="w-9 h-9 rounded-xl bg-[#0B1120] border border-slate-700 flex items-center justify-center p-1.5 shadow-sm group-hover:border-blue-500 transition-colors">
@@ -91,11 +97,11 @@ export function App() {
                   CIVICA
                 </span>
                 <span className="px-1.5 py-0.2 rounded text-[10px] font-mono font-medium bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
-                  v2.0
+                  DELHI
                 </span>
               </div>
               <p className="text-[10px] font-mono text-slate-500 dark:text-slate-400 hidden sm:block uppercase tracking-wider">
-                Delhi Municipal Intelligence &amp; Triage
+                Municipal Intelligence &amp; Triage
               </p>
             </div>
           </div>
@@ -103,14 +109,14 @@ export function App() {
           {/* Center Navigation Tabs */}
           <nav className="hidden md:flex items-center gap-1 bg-slate-100 dark:bg-slate-900/80 p-1 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-mono">
             <button
-              onClick={() => setActiveTab('earth')}
+              onClick={() => setActiveTab('command')}
               className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
-                activeTab === 'earth'
+                activeTab === 'command'
                   ? 'bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 font-semibold shadow-sm'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
               }`}
             >
-              <Globe2 className="w-3.5 h-3.5" /> 3D Earth
+              <LayoutDashboard className="w-3.5 h-3.5" /> Command Map
             </button>
             <button
               onClick={() => setActiveTab('tracks')}
@@ -121,16 +127,6 @@ export function App() {
               }`}
             >
               <ListFilter className="w-3.5 h-3.5" /> Problem Tracks
-            </button>
-            <button
-              onClick={() => setActiveTab('command')}
-              className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
-                activeTab === 'command'
-                  ? 'bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 font-semibold shadow-sm'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
-              }`}
-            >
-              <LayoutDashboard className="w-3.5 h-3.5" /> Command Center
             </button>
             <button
               onClick={() => setActiveTab('verify')}
@@ -147,11 +143,20 @@ export function App() {
           {/* Action Toolbar */}
           <div className="flex items-center gap-2">
             <button
-              onClick={() => setIsReportModalOpen(true)}
-              className="px-3.5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs shadow-md transition-all flex items-center gap-1.5"
+              onClick={() => setShowEarthSplash(true)}
+              title="View Orbital Earth Scene"
+              className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 border border-slate-200 dark:border-slate-700 transition-colors hidden sm:flex items-center gap-1.5 text-xs font-mono"
             >
-              <PlusCircle className="w-4 h-4" />
-              <span className="hidden sm:inline">Snap &amp; Speak</span>
+              <Globe2 className="w-3.5 h-3.5 text-blue-500" />
+              <span>Orbit</span>
+            </button>
+
+            <button
+              onClick={() => setIsReportModalOpen(true)}
+              className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs shadow-sm transition-all flex items-center gap-1.5"
+            >
+              <PlusCircle className="w-3.5 h-3.5" />
+              <span>Report</span>
             </button>
 
             <button
@@ -159,7 +164,7 @@ export function App() {
               title="Configure Gemini API Key"
               className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 border border-slate-200 dark:border-slate-700 transition-colors"
             >
-              <Key className="w-4 h-4" />
+              <Key className="w-3.5 h-3.5" />
             </button>
 
             <button
@@ -172,88 +177,40 @@ export function App() {
           </div>
         </div>
 
-        {/* Mobile Navigation Bar */}
+        {/* Mobile Navigation */}
         <div className="flex md:hidden items-center justify-around pt-3 mt-3 border-t border-slate-200 dark:border-slate-800 text-xs font-mono">
           <button
-            onClick={() => setActiveTab('earth')}
-            className={`py-1 ${activeTab === 'earth' ? 'text-blue-600 dark:text-blue-400 font-bold' : 'text-slate-500'}`}
+            onClick={() => setActiveTab('command')}
+            className={`py-1 ${activeTab === 'command' ? 'text-blue-600 dark:text-blue-400 font-bold' : 'text-slate-500'}`}
           >
-            3D Earth
+            Command Map
           </button>
           <button
             onClick={() => setActiveTab('tracks')}
             className={`py-1 ${activeTab === 'tracks' ? 'text-blue-600 dark:text-blue-400 font-bold' : 'text-slate-500'}`}
           >
-            Tracks
-          </button>
-          <button
-            onClick={() => setActiveTab('command')}
-            className={`py-1 ${activeTab === 'command' ? 'text-blue-600 dark:text-blue-400 font-bold' : 'text-slate-500'}`}
-          >
-            Command
+            Problem Tracks
           </button>
           <button
             onClick={() => setActiveTab('verify')}
             className={`py-1 ${activeTab === 'verify' ? 'text-blue-600 dark:text-blue-400 font-bold' : 'text-slate-500'}`}
           >
-            Verify
+            Fix Validator
           </button>
         </div>
       </header>
 
-      {/* Main Page Body */}
+      {/* Main Workspace Body */}
       <main className="max-w-7xl mx-auto px-4 lg:px-8 py-6 flex-1 w-full">
-        {activeTab === 'earth' && (
-          <div className="space-y-6 animate-fade-in">
-            <EarthScene onEnterWorkspace={() => setActiveTab('tracks')} />
-
-            {/* Below Hero Highlights (Wadhwani AI Style Preview) */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4">
-              <div 
-                onClick={() => setActiveTab('tracks')}
-                className="p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 hover:border-blue-500/50 transition-all cursor-pointer shadow-sm group"
-              >
-                <div className="text-[11px] font-mono text-blue-500 font-semibold mb-1">
-                  01 / PROBLEM TRACKS
-                </div>
-                <h4 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-blue-500 font-['Space_Grotesk']">
-                  Municipal Incident Catalog
-                </h4>
-                <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">
-                  Browse categorized Delhi challenges across Solid Waste, Arterial Roads, Water Main bursts, and AQI Hotspots.
-                </p>
-              </div>
-
-              <div 
-                onClick={() => setActiveTab('command')}
-                className="p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 hover:border-blue-500/50 transition-all cursor-pointer shadow-sm group"
-              >
-                <div className="text-[11px] font-mono text-amber-500 font-semibold mb-1">
-                  02 / SPATIAL INTELLIGENCE
-                </div>
-                <h4 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-amber-500 font-['Space_Grotesk']">
-                  Ward Cluster &amp; SLA Dispatch
-                </h4>
-                <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">
-                  Automatically consolidate duplicate complaints within 150m and route to MCD, PWD, DJB, or DPCC.
-                </p>
-              </div>
-
-              <div 
-                onClick={() => setActiveTab('verify')}
-                className="p-5 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 hover:border-emerald-500/50 transition-all cursor-pointer shadow-sm group"
-              >
-                <div className="text-[11px] font-mono text-emerald-500 font-semibold mb-1">
-                  03 / VISUAL AUDIT
-                </div>
-                <h4 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-emerald-500 font-['Space_Grotesk']">
-                  Fake-Fix Anti-Fraud Buster
-                </h4>
-                <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">
-                  Compare pre-repair and contractor completion photos using Gemini computer vision to prevent fraudulent payouts.
-                </p>
-              </div>
-            </div>
+        {activeTab === 'command' && (
+          <div className="animate-fade-in">
+            <AdminCommandCenter
+              incidents={incidents}
+              selectedIncident={selectedIncident}
+              onSelectIncident={(inc) => setSelectedIncident(inc)}
+              onDispatchIncident={handleDispatch}
+              isDark={isDark}
+            />
           </div>
         )}
 
@@ -263,16 +220,6 @@ export function App() {
               incidents={incidents}
               onSelectIncident={(inc) => setSelectedIncident(inc)}
               onOpenReport={() => setIsReportModalOpen(true)}
-            />
-          </div>
-        )}
-
-        {activeTab === 'command' && (
-          <div className="animate-fade-in">
-            <AdminCommandCenter
-              incidents={incidents}
-              onSelectIncident={(inc) => setSelectedIncident(inc)}
-              onDispatchIncident={handleDispatch}
             />
           </div>
         )}
@@ -303,14 +250,14 @@ export function App() {
       />
 
       {/* Footer */}
-      <footer className="mt-12 border-t border-slate-200 dark:border-slate-800/80 bg-white dark:bg-[#070D18] py-8 text-xs font-mono text-slate-500">
-        <div className="max-w-7xl mx-auto px-4 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
+      <footer className="mt-12 border-t border-slate-200 dark:border-slate-800/80 bg-white dark:bg-[#070D18] py-6 text-xs font-mono text-slate-500">
+        <div className="max-w-7xl mx-auto px-4 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <img src="/assets/logo_civica.svg" alt="CIVICA" className="w-5 h-5" />
+            <img src="/assets/logo_civica.svg" alt="CIVICA" className="w-4 h-4" />
             <span className="font-bold text-slate-800 dark:text-slate-200 font-['Space_Grotesk']">
               CIVICA
             </span>
-            <span>· Evidence-Based Municipal Intelligence for Delhi</span>
+            <span>· Delhi Municipal Action Platform</span>
           </div>
 
           <div className="flex items-center gap-4">
