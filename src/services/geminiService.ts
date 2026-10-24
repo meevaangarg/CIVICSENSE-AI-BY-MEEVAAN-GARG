@@ -26,19 +26,29 @@ export interface VerificationResult {
 }
 
 export class CivicGeminiService {
-  private static apiKey: string = (import.meta as any).env?.VITE_GEMINI_API_KEY || localStorage.getItem('civica:gemini_key') || '';
+  private static userKey: string = localStorage.getItem('civica:gemini_key') || '';
+  private static envKey: string = (import.meta as any).env?.VITE_GEMINI_API_KEY || '';
 
   public static setApiKey(key: string) {
-    this.apiKey = key.trim();
-    localStorage.setItem('civica:gemini_key', this.apiKey);
-  }
-
-  public static getApiKey(): string {
-    return this.apiKey;
+    this.userKey = key.trim();
+    if (this.userKey) {
+      localStorage.setItem('civica:gemini_key', this.userKey);
+    } else {
+      localStorage.removeItem('civica:gemini_key');
+    }
   }
 
   public static hasApiKey(): boolean {
-    return Boolean(this.apiKey && this.apiKey.length > 10);
+    const active = this.userKey || this.envKey;
+    return Boolean(active && active.length > 10);
+  }
+
+  public static isCustomKeySet(): boolean {
+    return Boolean(this.userKey && this.userKey.length > 10);
+  }
+
+  private static getEffectiveKey(): string {
+    return this.userKey || this.envKey;
   }
 
   /**
@@ -87,7 +97,7 @@ Citizen Report: "${textDescription}"`;
       }
 
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${this.apiKey}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${this.getEffectiveKey()}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
