@@ -8,6 +8,7 @@ import { CitizenReportModal } from './components/CitizenReportModal';
 import { IncidentDetailModal } from './components/IncidentDetailModal';
 import { ApiKeyModal } from './components/ApiKeyModal';
 import { OfficerDispatchModal } from './components/OfficerDispatchModal';
+import { CivicPreloader } from './components/CivicPreloader';
 import { 
   ListFilter, 
   Map, 
@@ -20,6 +21,7 @@ import {
 } from 'lucide-react';
 
 export function App() {
+  const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'command' | 'tracks' | 'verify'>('command');
   const [incidents, setIncidents] = useState<CivicIncident[]>(INITIAL_INCIDENTS);
   const [selectedIncident, setSelectedIncident] = useState<CivicIncident | null>(null);
@@ -80,6 +82,9 @@ export function App() {
   return (
     <div className="min-h-screen bg-[#F4F7FC] dark:bg-[#070D18] text-slate-900 dark:text-slate-100 flex flex-col justify-between font-sans selection:bg-blue-600/20 selection:text-blue-700 dark:selection:text-blue-300">
       
+      {/* Sleek Enterprise Preloader */}
+      {isLoading && <CivicPreloader onComplete={() => setIsLoading(false)} />}
+
       {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed top-16 right-5 z-50 flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 text-white border border-slate-700 shadow-2xl text-xs font-mono animate-fade-in">
