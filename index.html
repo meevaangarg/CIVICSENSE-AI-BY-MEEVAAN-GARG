@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CIVICA | Delhi Municipal Intelligence Platform</title>
+    <meta name="description" content="Evidence-based civic intelligence, spatial deduplication, and automated municipal dispatch for Delhi." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+    <script>
+      (function () {
+        var dark = false;
+        try {
+          var t = localStorage.getItem('civica:theme');
+          dark = t === 'dark' || (t !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        } catch (e) {
+          try { dark = window.matchMedia('(prefers-color-scheme: dark)').matches; } catch (e2) {}
+        }
+        if (dark) document.documentElement.classList.add('dark');
+      })();
+    </script>
+  </head>
+  <body class="bg-[#F8FAFC] dark:bg-[#0B1120] text-slate-900 dark:text-slate-100 antialiased selection:bg-blue-600/20 selection:text-blue-700 dark:selection:text-blue-300">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+
