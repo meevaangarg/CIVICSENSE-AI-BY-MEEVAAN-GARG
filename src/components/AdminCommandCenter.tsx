@@ -1,13 +1,7 @@
 import React, { useState } from 'react';
 import type { CivicIncident } from '../data/civicData';
-import { DELHI_AGENCIES } from '../data/civicData';
 import { DelhiLeafletMap } from './DelhiLeafletMap';
-import { 
-  ShieldCheck, 
-  MapPin, 
-  Send, 
-  Radio
-} from 'lucide-react';
+import { Send, MapPin } from 'lucide-react';
 
 interface AdminCommandCenterProps {
   incidents: CivicIncident[];
@@ -41,35 +35,28 @@ export const AdminCommandCenter: React.FC<AdminCommandCenterProps> = ({
   const activeIncident = incidents.find(i => i.id === activeIncidentId) || incidents[0];
 
   return (
-    <div className="space-y-6">
-      {/* Header Banner */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
+    <div className="space-y-4">
+      {/* Header & Filter Controls */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200 dark:border-slate-800">
         <div>
-          <div className="flex items-center gap-2 mb-1.5">
-            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold tracking-wider uppercase bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20 flex items-center gap-1.5">
-              <Radio className="w-3 h-3 animate-pulse text-red-500" />
-              MUNICIPAL COMMAND DESK
-            </span>
-            <span className="text-xs text-slate-400 font-mono">DELHI NCT DISPATCH</span>
-          </div>
-          <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-white font-['Space_Grotesk']">
-            Ward Hotspot Intelligence &amp; SLA Dispatch
+          <h2 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white font-['Space_Grotesk']">
+            Incident Map
           </h2>
-          <p className="text-sm text-slate-600 dark:text-slate-400 mt-1 max-w-2xl">
-            Spatial deduplication, live cluster triangulation, and automated machinery dispatch across MCD, PWD, DJB, and DPCC.
+          <p className="text-xs text-slate-500">
+            Delhi municipal grievances and cluster routing
           </p>
         </div>
 
-        {/* Agency Quick Filter Pills */}
-        <div className="flex items-center gap-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-1.5 rounded-xl shadow-sm">
+        {/* Agency Filter */}
+        <div className="flex items-center gap-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-1 rounded-lg">
           {['All', 'MCD', 'PWD', 'DJB', 'DPCC'].map(dept => (
             <button
               key={dept}
               onClick={() => setSelectedDeptFilter(dept)}
-              className={`px-3 py-1 text-xs font-mono rounded-lg transition-all border ${
+              className={`px-2.5 py-1 text-xs font-mono rounded transition-all ${
                 selectedDeptFilter === dept
-                  ? 'bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 border-slate-900 dark:border-slate-100 font-semibold shadow-sm'
-                  : 'bg-transparent text-slate-600 dark:text-slate-400 border-transparent hover:bg-slate-100 dark:hover:bg-slate-800'
+                  ? 'bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 font-semibold shadow-sm'
+                  : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
               }`}
             >
               {dept}
@@ -78,95 +65,43 @@ export const AdminCommandCenter: React.FC<AdminCommandCenterProps> = ({
         </div>
       </div>
 
-      {/* Agency Status Cards Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        {DELHI_AGENCIES.map(agency => (
-          <div
-            key={agency.code}
-            className="p-4 rounded-xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/90 shadow-sm flex flex-col justify-between"
-          >
-            <div>
-              <div className="flex items-center justify-between text-xs font-mono mb-2">
-                <span className="font-bold text-slate-900 dark:text-white px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-                  {agency.code}
-                </span>
-                <span className="text-emerald-500 font-medium">98.4% SLA</span>
-              </div>
-              <h4 className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate">
-                {agency.name}
-              </h4>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1 mt-0.5">
-                {agency.jurisdiction}
-              </p>
-            </div>
-
-            <div className="pt-3 mt-3 border-t border-slate-100 dark:border-slate-800 text-[11px] font-mono text-slate-500 flex justify-between">
-              <span>AVG TIME: {agency.avgResolutionTime}</span>
-              <span className="text-blue-500 font-semibold">{agency.activeIncidents} Active</span>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Split Console: Interactive Delhi Leaflet Map + Active Incident Work-Order */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      {/* Main Console: Leaflet Map + Selected Issue Panel */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
         
-        {/* Left Column: Leaflet Map (7 Cols) */}
-        <div className="lg:col-span-7 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl p-5 shadow-sm space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <MapPin className="w-4 h-4 text-blue-500" />
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white font-mono uppercase tracking-wide">
-                Live Delhi Leaflet Geo-Spatial Map
-              </h3>
-            </div>
-            <span className="text-xs font-mono text-slate-500">
-              Showing {filteredIncidents.length} clusters
-            </span>
-          </div>
-
-          {/* Real Leaflet Map */}
+        {/* Leaflet Map (8 cols) */}
+        <div className="lg:col-span-8 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl p-3 shadow-sm">
           <DelhiLeafletMap
             incidents={filteredIncidents}
             selectedIncident={activeIncident}
             onSelectIncident={(inc) => setActiveIncidentId(inc.id)}
             isDark={isDark}
           />
-
-          {/* Spatial Deduplication Engine Info */}
-          <div className="p-3 rounded-lg bg-blue-500/5 border border-blue-500/20 text-xs font-mono text-slate-600 dark:text-slate-400 flex items-center justify-between">
-            <span className="flex items-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-blue-500" />
-              <span>SPATIAL CLUSTER ENGINE: 112 CITIZEN REPORTS UNIFIED</span>
-            </span>
-            <span className="text-emerald-500 font-semibold">+91% REDUCED QUEUE NOISE</span>
-          </div>
         </div>
 
-        {/* Right Column: Selected Incident Engineering Work-Order & Dispatch (5 Cols) */}
+        {/* Selected Incident Panel (4 cols) */}
         {activeIncident && (
-          <div className="lg:col-span-5 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl p-5 shadow-sm space-y-4 flex flex-col justify-between">
+          <div className="lg:col-span-4 bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl p-4 shadow-sm flex flex-col justify-between space-y-4">
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="px-2.5 py-0.5 rounded text-[11px] font-mono font-bold bg-blue-600 text-white">
-                  {activeIncident.department} WORK-ORDER
+                <span className="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-blue-600 text-white">
+                  {activeIncident.department}
                 </span>
-                <span className="text-xs font-mono text-slate-400">
+                <span className="text-[11px] font-mono text-slate-400">
                   {activeIncident.trackingCode}
                 </span>
               </div>
 
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white font-['Space_Grotesk']">
+              <h3 className="text-base font-bold text-slate-900 dark:text-white font-['Space_Grotesk'] leading-snug">
                 {activeIncident.title}
               </h3>
 
-              <div className="text-xs text-slate-500 dark:text-slate-400 space-y-1">
-                <p><strong className="text-slate-700 dark:text-slate-300">Jurisdiction: </strong>{activeIncident.ward}</p>
-                <p><strong className="text-slate-700 dark:text-slate-300">Location: </strong>{activeIncident.location}</p>
+              <div className="flex items-center gap-1.5 text-xs text-slate-500 font-mono">
+                <MapPin className="w-3.5 h-3.5 text-blue-500 shrink-0" />
+                <span className="truncate">{activeIncident.ward}</span>
               </div>
 
-              {/* Photo preview */}
-              <div className="rounded-lg overflow-hidden border border-slate-200 dark:border-slate-800 h-36">
+              {/* Photo */}
+              <div className="rounded-lg overflow-hidden border border-slate-200 dark:border-slate-800 h-40">
                 <img
                   src={activeIncident.imageUrl}
                   alt="Incident site"
@@ -174,24 +109,19 @@ export const AdminCommandCenter: React.FC<AdminCommandCenterProps> = ({
                 />
               </div>
 
-              {/* Root Cause Analysis by Gemini */}
-              <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 space-y-1">
-                <h5 className="text-[11px] font-mono uppercase text-slate-400 font-semibold">
-                  Gemini Diagnosis:
-                </h5>
-                <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-sans">
-                  {activeIncident.rootCauseAnalysis}
-                </p>
-              </div>
+              {/* Description */}
+              <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-3 leading-relaxed">
+                {activeIncident.description}
+              </p>
 
-              {/* Machinery & Cost Matrix */}
+              {/* Required Equipment */}
               <div className="space-y-1 text-xs font-mono">
-                <span className="text-slate-400 uppercase text-[10px]">Required Equipment &amp; Materials:</span>
-                <div className="flex flex-wrap gap-1.5">
+                <span className="text-slate-400 text-[10px] uppercase">Equipment:</span>
+                <div className="flex flex-wrap gap-1">
                   {activeIncident.requiredEquipment.map((eq, i) => (
                     <span
                       key={i}
-                      className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[11px] border border-slate-200 dark:border-slate-700"
+                      className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] border border-slate-200 dark:border-slate-700"
                     >
                       {eq}
                     </span>
@@ -200,28 +130,28 @@ export const AdminCommandCenter: React.FC<AdminCommandCenterProps> = ({
               </div>
             </div>
 
-            {/* Bottom Actions: Dispatch Trigger & View Full Details */}
-            <div className="pt-4 border-t border-slate-100 dark:border-slate-800/80 space-y-2">
+            {/* Actions */}
+            <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-2">
               <div className="flex items-center justify-between text-xs font-mono">
-                <span className="text-slate-500">ESTIMATED REPAIR:</span>
+                <span className="text-slate-500">Est. Cost:</span>
                 <span className="text-emerald-500 font-bold">
                   ₹{activeIncident.estimatedCostInr.toLocaleString('en-IN')}
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 gap-2 pt-1">
+              <div className="grid grid-cols-2 gap-2">
                 <button
                   onClick={() => onSelectIncident(activeIncident)}
-                  className="py-2.5 px-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-medium text-slate-700 dark:text-slate-200 transition-all text-center"
+                  className="py-2 px-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-medium text-slate-700 dark:text-slate-300 text-center"
                 >
-                  Full Investigation
+                  Details
                 </button>
                 <button
                   onClick={() => onDispatchIncident(activeIncident.id)}
-                  className="py-2.5 px-3 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium transition-all shadow-md flex items-center justify-center gap-1.5"
+                  className="py-2 px-3 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-medium transition-all shadow-sm flex items-center justify-center gap-1.5"
                 >
                   <Send className="w-3.5 h-3.5" />
-                  <span>Dispatch Squad</span>
+                  <span>Dispatch</span>
                 </button>
               </div>
             </div>
